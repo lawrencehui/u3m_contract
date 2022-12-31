@@ -6,9 +6,9 @@ from algosdk import account, encoding
 from algosdk.logic import get_application_address
 
 from .operations import createAuctionApp, setupAuctionApp, placeBid, closeAuction
-from .util import getBalances, getAppGlobalState, getLastBlockTimestamp
-from .testing.setup import getAlgodClient
-from .testing.resources import getTemporaryAccount, optInToAsset, createDummyAsset
+from ..common import getBalances, getAppGlobalState, getLastBlockTimestamp
+from ..common.setup import getAlgodClient
+from ..common.resources import getTemporaryAccount, optInToAsset, createDummyAsset
 
 
 def test_create():
@@ -142,7 +142,8 @@ def test_first_bid_before_start():
 
     with pytest.raises(Exception):
         bidAmount = 500_000  # 0.5 Algos
-        placeBid(client=client, appID=appID, bidder=bidder, bidAmount=bidAmount)
+        placeBid(client=client, appID=appID,
+                 bidder=bidder, bidAmount=bidAmount)
 
 
 def test_first_bid():
@@ -204,7 +205,8 @@ def test_first_bid():
     assert actualState == expectedState
 
     actualBalances = getBalances(client, get_application_address(appID))
-    expectedBalances = {0: 2 * 100_000 + 2 * 1_000 + bidAmount, nftID: nftAmount}
+    expectedBalances = {0: 2 * 100_000 + 2 *
+                        1_000 + bidAmount, nftID: nftAmount}
 
     assert actualBalances == expectedBalances
 
@@ -283,7 +285,8 @@ def test_second_bid():
     assert actualState == expectedState
 
     actualAppBalances = getBalances(client, get_application_address(appID))
-    expectedAppBalances = {0: 2 * 100_000 + 2 * 1_000 + bid2Amount, nftID: nftAmount}
+    expectedAppBalances = {0: 2 * 100_000 + 2 *
+                           1_000 + bid2Amount, nftID: nftAmount}
 
     assert actualAppBalances == expectedAppBalances
 

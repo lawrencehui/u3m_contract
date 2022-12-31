@@ -3,17 +3,13 @@ from time import time, sleep
 from algosdk import account, encoding
 from algosdk.logic import get_application_address
 from auction.operations import createAuctionApp, setupAuctionApp, placeBid, closeAuction
-from auction.util import (
+from .util import (
     getBalances,
     getAppGlobalState,
     getLastBlockTimestamp,
 )
-from auction.testing.setup import getAlgodClient
-from auction.testing.resources import (
-    getTemporaryAccount,
-    optInToAsset,
-    createDummyAsset,
-)
+from .setup import getAlgodClient
+from .resources import getTemporaryAccount
 
 
 def genAccounts():

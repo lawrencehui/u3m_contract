@@ -1,21 +1,22 @@
 from time import time, sleep
 from algosdk import account, encoding, mnemonic
 from algosdk.logic import get_application_address
-from auction.operations import createAuctionApp, setupAuctionApp, placeBid, closeAuction
-from auction.util import (
-    getBalances,
-    getAppGlobalState,
-    getLastBlockTimestamp,
-)
-from auction.testing.setup import getAlgodClient
-from auction.testing.resources import (
-    getTemporaryAccount,
-    optInToAsset,
-    createDummyAsset,
-)
-
-from auction.account import Account
-from pyteal import *
+# from auction.operations import createAuctionApp, setupAuctionApp, placeBid, closeAuction
+# from common.util import (
+#     getBalances,
+#     getAppGlobalState,
+#     getLastBlockTimestamp,
+# )
+# from auction.testing.setup import getAlgodClient
+# from auction.testing.resources import (
+#     getTemporaryAccount,
+#     optInToAsset,
+#     createDummyAsset,
+# )
+from src.auction.operations import createAuctionApp, setupAuctionApp, placeBid, closeAuction
+from src.common.setup import getAlgodClient
+from src.common.resources import getTemporaryAccount, optInToAsset, createDummyAsset
+from src.common.util import getBalances, getLastBlockTimestamp
 
 
 def main_u3m():
@@ -40,7 +41,7 @@ def main_u3m():
     print("Seller's balances:", getBalances(client, seller.getAddress()), "\n")
 
     startTime = int(time()) + 10  # start time is 10 seconds in the future
-    endTime = startTime + 120 * 60  # end time is 30 seconds after start
+    endTime = startTime + 5 * 60  # end time is 5 * 60 seconds after start
     reserve = 1_000_000  # 1 Algo
     increment = 100_000  # 0.1 Algo
     print("Admin is creating an auction that lasts 30 seconds to auction off the NFT...")

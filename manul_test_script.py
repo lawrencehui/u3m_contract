@@ -2,7 +2,7 @@ from time import time, sleep
 from algosdk import account, encoding, mnemonic
 from algosdk.logic import get_application_address
 from auction.operations import createAuctionApp, setupAuctionApp, placeBid, closeAuction
-from auction.util import (
+from common.util import (
     getBalances,
     getAppGlobalState,
     getLastBlockTimestamp,
@@ -14,7 +14,7 @@ from auction.testing.resources import (
     createDummyAsset,
 )
 
-from auction.account import Account
+from common.account import Account
 from pyteal import *
 
 

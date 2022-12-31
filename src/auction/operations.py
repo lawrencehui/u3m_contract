@@ -4,16 +4,12 @@ from algosdk.v2client.algod import AlgodClient
 from algosdk.future import transaction
 from algosdk.logic import get_application_address
 from algosdk import account, encoding
-
 from pyteal import compileTeal, Mode
 
-from .account import Account
 from .contracts import approval_program, clear_state_program
-from .util import (
-    waitForTransaction,
-    fullyCompileContract,
-    getAppGlobalState,
-)
+from ..common.account import Account
+from ..common.resources import waitForTransaction
+from ..common.util import fullyCompileContract, getAppGlobalState
 
 APPROVAL_PROGRAM = b""
 CLEAR_STATE_PROGRAM = b""
