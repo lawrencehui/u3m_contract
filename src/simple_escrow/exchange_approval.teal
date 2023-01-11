@@ -1,0 +1,212 @@
+#pragma version 5
+txn ApplicationID
+int 0
+==
+bnz main_l17
+txn OnCompletion
+int NoOp
+==
+bnz main_l10
+txn OnCompletion
+int DeleteApplication
+==
+bnz main_l6
+txn OnCompletion
+int OptIn
+==
+txn OnCompletion
+int CloseOut
+==
+||
+txn OnCompletion
+int UpdateApplication
+==
+||
+bnz main_l5
+err
+main_l5:
+int 0
+return
+main_l6:
+global CurrentApplicationAddress
+byte "nft_id"
+app_global_get
+asset_holding_get AssetBalance
+store 3
+store 2
+txn Sender
+byte "seller"
+app_global_get
+==
+txn Sender
+global CreatorAddress
+==
+||
+assert
+load 3
+load 2
+int 0
+>
+&&
+bnz main_l9
+byte "seller"
+app_global_get
+callsub closeAccountTo_1
+int 1
+return
+int 0
+return
+main_l9:
+byte "nft_id"
+app_global_get
+byte "seller"
+app_global_get
+callsub closeNFTTo_0
+byte "seller"
+app_global_get
+callsub closeAccountTo_1
+int 1
+return
+main_l10:
+txna ApplicationArgs 0
+byte "setup"
+==
+bnz main_l16
+txna ApplicationArgs 0
+byte "buy"
+==
+bnz main_l13
+err
+main_l13:
+global CurrentApplicationAddress
+byte "nft_id"
+app_global_get
+asset_holding_get AssetBalance
+store 1
+store 0
+load 1
+load 0
+int 0
+>
+&&
+txn GroupIndex
+int 1
+-
+gtxns TypeEnum
+int pay
+==
+&&
+txn GroupIndex
+int 1
+-
+gtxns Sender
+txn Sender
+==
+&&
+txn GroupIndex
+int 1
+-
+gtxns Receiver
+global CurrentApplicationAddress
+==
+&&
+txn GroupIndex
+int 1
+-
+gtxns Amount
+global MinTxnFee
+>=
+&&
+assert
+txn GroupIndex
+int 1
+-
+gtxns Amount
+byte "sale_price"
+app_global_get
+>=
+bnz main_l15
+int 0
+return
+main_l15:
+byte "buyer"
+txn GroupIndex
+int 1
+-
+gtxns Sender
+app_global_put
+byte "nft_id"
+app_global_get
+byte "buyer"
+app_global_get
+callsub closeNFTTo_0
+byte "seller"
+app_global_get
+callsub closeAccountTo_1
+int 1
+return
+main_l16:
+itxn_begin
+int axfer
+itxn_field TypeEnum
+byte "nft_id"
+app_global_get
+itxn_field XferAsset
+global CurrentApplicationAddress
+itxn_field AssetReceiver
+itxn_submit
+int 1
+return
+main_l17:
+byte "seller"
+txna ApplicationArgs 0
+app_global_put
+byte "nft_id"
+txna ApplicationArgs 1
+btoi
+app_global_put
+byte "sale_price"
+txna ApplicationArgs 2
+btoi
+app_global_put
+int 1
+return
+
+// closeNFTTo
+closeNFTTo_0:
+store 5
+store 4
+global CurrentApplicationAddress
+load 4
+asset_holding_get AssetBalance
+store 7
+store 6
+load 7
+bz closeNFTTo_0_l2
+itxn_begin
+int axfer
+itxn_field TypeEnum
+load 4
+itxn_field XferAsset
+load 5
+itxn_field AssetCloseTo
+itxn_submit
+closeNFTTo_0_l2:
+retsub
+
+// closeAccountTo
+closeAccountTo_1:
+store 8
+global CurrentApplicationAddress
+balance
+int 0
+!=
+bz closeAccountTo_1_l2
+itxn_begin
+int pay
+itxn_field TypeEnum
+load 8
+itxn_field CloseRemainderTo
+itxn_submit
+closeAccountTo_1_l2:
+retsub

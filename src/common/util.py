@@ -59,7 +59,8 @@ def waitForTransaction(
 def fullyCompileContract(client: AlgodClient, contract: Expr) -> bytes:
     teal = compileTeal(contract, mode=Mode.Application, version=5)
     response = client.compile(teal)
-    return b64decode(response["result"])
+    # return b64decode(response["result"])
+    return response["result"]
 
 
 def decodeState(stateArray: List[Any]) -> Dict[bytes, Union[int, bytes]]:

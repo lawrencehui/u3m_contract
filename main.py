@@ -1,18 +1,7 @@
 from time import time, sleep
 from algosdk import account, encoding, mnemonic
 from algosdk.logic import get_application_address
-# from auction.operations import createAuctionApp, setupAuctionApp, placeBid, closeAuction
-# from common.util import (
-#     getBalances,
-#     getAppGlobalState,
-#     getLastBlockTimestamp,
-# )
-# from auction.testing.setup import getAlgodClient
-# from auction.testing.resources import (
-#     getTemporaryAccount,
-#     optInToAsset,
-#     createDummyAsset,
-# )
+
 from src.auction.operations import createAuctionApp, setupAuctionApp, placeBid, closeAuction
 from src.common.setup import getAlgodClient
 from src.common.resources import getTemporaryAccount, optInToAsset, createDummyAsset
