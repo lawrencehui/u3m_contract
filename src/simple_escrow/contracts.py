@@ -81,6 +81,7 @@ def approval_program():
     on_buy_nft_holding = AssetHolding.balance(
         Global.current_application_address(), App.globalGet(nft_id_key)
     )
+
     on_buy = Seq(
         on_buy_nft_holding,
         Assert(
@@ -88,6 +89,8 @@ def approval_program():
                 # the listing has been set up
                 on_buy_nft_holding.hasValue(),
                 on_buy_nft_holding.value() > Int(0),
+                # [audit fix] 4.3 Group Size Validation
+                Global.group_size() <= Int(16),
                 Gtxn[on_buy_txn_index].type_enum() == TxnType.Payment,
                 Gtxn[on_buy_txn_index].sender() == Txn.sender(),
                 Gtxn[on_buy_txn_index].receiver()

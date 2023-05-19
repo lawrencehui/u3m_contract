@@ -82,15 +82,14 @@ def main_simple_buy():
     print("Buyer wants to buy the NFT, his balances before buying:",
           buyerBalancesBefore)
 
-    buyNft(client=client, appID=appID, buyer=buyer,
-           seller=seller, price=sale_price)
+    # [audit fix] 4.1 Improper Buyer Balance Validations
+    if(buyerBalancesBefore.get(0) > sale_price):
+        buyNft(client=client, appID=appID, buyer=buyer, seller=seller, price=sale_price)
+    
+    else: 
+        raise Exception("buyer balance lower than sale price")
 
     print("Done Opt in and buying\n")
-
-    print("Seller is closing out the app\n")
-    closeApp(client, appID, seller)
-
-    print("Done closing")
 
     actualAppBalances = getBalances(client, get_application_address(appID))
     print("The escrow account now holds the following:", actualAppBalances)
@@ -101,8 +100,17 @@ def main_simple_buy():
     actualBuyerBalances = getBalances(client, buyer.getAddress())
     print("Buyer's balances after txn: ", actualBuyerBalances, " Algos")
 
+    # [audit fix] 4.2 Balance Verification before Closing the App
+    if(actualAppBalances.get(0) == 0 and actualSellerBalances.get(nftID) == 0 and actualBuyerBalances.get(nftID) == 1):
+        print("Account balance verification success. Seller is closing out the app\n")
+        closeApp(client, appID, seller)
+    else: 
+        raise Exception("account balance verifications failed ")
+    
+    print("Done closing")
 
-# main_simple_buy()
+
+main_simple_buy()
 
 
 def simple_buy_test():
@@ -118,4 +126,4 @@ def simple_buy_test():
     clear_file.close()
 
 
-simple_buy_test()
+# simple_buy_test()
