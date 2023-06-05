@@ -83,10 +83,11 @@ def main_simple_buy():
           buyerBalancesBefore)
 
     # [audit fix] 4.1 Improper Buyer Balance Validations
-    if(buyerBalancesBefore.get(0) > sale_price):
-        buyNft(client=client, appID=appID, buyer=buyer, seller=seller, price=sale_price)
-    
-    else: 
+    if (buyerBalancesBefore.get(0) > sale_price):
+        buyNft(client=client, appID=appID, buyer=buyer,
+               seller=seller, price=sale_price)
+
+    else:
         raise Exception("buyer balance lower than sale price")
 
     print("Done Opt in and buying\n")
@@ -101,19 +102,19 @@ def main_simple_buy():
     print("Buyer's balances after txn: ", actualBuyerBalances, " Algos")
 
     # [audit fix] 4.2 Balance Verification before Closing the App
-    if(actualAppBalances.get(0) == 0 and actualSellerBalances.get(nftID) == 0 and actualBuyerBalances.get(nftID) == 1):
+    if (actualAppBalances.get(0) == 0 and actualSellerBalances.get(nftID) == 0 and actualBuyerBalances.get(nftID) == 1):
         print("Account balance verification success. Seller is closing out the app\n")
         closeApp(client, appID, seller)
-    else: 
+    else:
         raise Exception("account balance verifications failed ")
-    
+
     print("Done closing")
 
 
 main_simple_buy()
 
 
-def simple_buy_test():
+def gen_b64_contracts():
     client = getAlgodClient()
     approval, clear = getContracts(client)
 
@@ -126,4 +127,4 @@ def simple_buy_test():
     clear_file.close()
 
 
-# simple_buy_test()
+gen_b64_contracts()
